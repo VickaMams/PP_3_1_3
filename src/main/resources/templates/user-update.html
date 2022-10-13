@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>User update</title>
+</head>
+<body>
+<form action="#" th:action="@{/admin/user-update}" th:object="${user}" method="post">
+    <label for="id">ID</label>
+    <input readonly type="number" th:field="*{id}" id="id" placeholder="ID">
+    <br/>
+    <label for="name">name</label>
+    <input type="text" th:field="*{name}" id="name" placeholder="name">
+
+
+
+    <label for="email">email</label>
+    <input type="text" th:field="*{username}" id="email" placeholder="email">
+
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label mb-0">Password</label>
+        <input type="password" class="form-control" id="password" th:field="*{password}"/>
+    </div>
+    <label for="role">Roles:</label>
+    <select multiple="multiple" th:field="*{roles}"
+            type="text" id="role">
+        <option th:each="role : ${roles}" th:value="${role.getId()}" th:text="${
+        role.getAuthority().replaceFirst('ROLE_', '')}"></option>
+
+    </select>
+
+    <input type="submit" value="Update">
+
+</form>
+</body>
+</html>
