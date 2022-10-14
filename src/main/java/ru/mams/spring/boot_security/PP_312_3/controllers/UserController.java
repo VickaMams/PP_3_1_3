@@ -25,14 +25,14 @@ public class UserController {
     public String pageUser(Principal principal, Model model) {
         model.addAttribute("user", userService.findByUsername(principal.getName()));
         model.addAttribute("roles", roleService.listRoles());
-        return "/user-info";
+        return "/user";
     }
 
     @GetMapping("/{id}")
     public String pageUser(Model model, @PathVariable("id") Long id) {
         model.addAttribute("roles", roleService.listRoles());
         model.addAttribute("user", userService.findById(id));
-        return "/user-info";
+        return "/user";
     }
 
 }

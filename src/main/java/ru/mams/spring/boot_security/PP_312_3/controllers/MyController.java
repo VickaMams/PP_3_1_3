@@ -8,7 +8,7 @@ import ru.mams.spring.boot_security.PP_312_3.models.User;
 import ru.mams.spring.boot_security.PP_312_3.services.RoleService;
 import ru.mams.spring.boot_security.PP_312_3.services.UserService;
 
-import java.util.List;
+import java.security.Principal;
 
 @Controller
 public class MyController {
@@ -21,76 +21,38 @@ public class MyController {
     }
 
 
+    @GetMapping("/admin")
+    public String findAll(Model model,Principal principal){
 
 
-    @RequestMapping("/admin")
-    public String  showAllUsers(Model model){
-
-        List<User> allUsers = userService.findAll();
-        model.addAttribute("allUsers", allUsers);
+        model.addAttribute("admin", userService.findByUsername(principal.getName()));
+        model.addAttribute("users", userService.findAll());
+        model.addAttribute("roles", roleService.listRoles());
+        model.addAttribute("newUser", new User());
 
         return "admin";
     }
 
 
-    @RequestMapping("/addNewUser")
-    public String addNewUser(Model model){
-
-        User user = new User();
-        model.addAttribute("user", user);
-        model.addAttribute("roles", roleService.listRoles());
-
-        return "user";
-    }
-
-    @RequestMapping ("saveUser")
-    public  String saveUser(@ModelAttribute("user") User user){
+    @PostMapping("/admin/create")
+    public String createUser(@ModelAttribute("user") User user) {
 
         userService.saveUser(user);
 
         return "redirect:/admin";
     }
 
-//    @RequestMapping("/update")
-//    public String updateUser(@RequestParam("userId") Long id, Model model){
-//        System.out.println("UPDATE");
-//        User user = userService.getUser(id);
-//        model.addAttribute("user", user);
-//        model.addAttribute("roles", roleService.listRoles());
-//        return"user";
-//    }
-//
-//
-//
-//
-//    @RequestMapping("/delete")
-//    public  String deleteUser(@RequestParam("userId") Long id){
-//
-//        userService.deleteUser(id);
-//
-//
-//        return "redirect:/admin";
-//    }
 
-    @GetMapping("/admin/user-delete/{id}")
+    @DeleteMapping("/admin/delete/{id}")
     public String deleteUser(@PathVariable("id") Long id){
         userService.deleteById(id);
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/user-update/{id}")
-    public String updateUserForm(@PathVariable("id") Long id, Model model){
-        User user = userService.findById(id);
-        model.addAttribute("user", user);
-        model.addAttribute("roles", roleService.listRoles());
-
-        return "user-update";
-    }
-
-    @PostMapping("/admin/user-update")
-    public String updateUser(User user, BindingResult bindingResult){
-        if (bindingResult.hasErrors()) { return "/user-update"; }
-        else userService.saveUser(user);
+    @PostMapping("/admin/update/{id}")
+    public String updateUser(@ModelAttribute("user") User user, @RequestParam(value = "role") String role) {
+        user.setRoles(roleService.findRolesByName(role));
+        userService.saveUser(user);
         return "redirect:/admin";
     }
 

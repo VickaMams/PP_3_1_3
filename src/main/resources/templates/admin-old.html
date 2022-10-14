@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<body>
+<h2>All users</h2>
+<br>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Roles</th>
+        <th>Operations</th>
+    </tr>
+
+    <tr th:each ="user : ${allUsers}">
+        <div th:with="updateButton=@{/update(userId=${user.id})}"></div>
+        <div th:with="deleteButton=@{/delete(userId=${user.id})}"></div>
+
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.username}"></td>
+        <td><a th:each="role : ${user.getRoles()}" th:text="${role.getAuthority().replaceFirst('ROLE_', '')} + ' '"></a></td>
+        <td><a th:href="@{/admin/user-update/{id}(id=${user.id})}">Edit</a></td>
+        <td><a th:href="@{/admin/user-delete/{id}(id=${user.id})}">Delete</a></td>
+<!--                    <td>-->
+<!--                        <input type="button" value="Update"-->
+<!--                               onclick="window.location.href='${updateButton}'"/>-->
+
+<!--                        <input type="button" value="Delete"-->
+<!--                               onclick="window.location.href='${deleteButton}'"/>-->
+<!--                        <input type="button" value="Add"-->
+<!--                               th:data-target="${'#edit' + user.id}"-->
+<!--                               onclick="window.location.href='/update(userId=${user.id})}'">-->
+
+
+<!--                    </td>-->
+
+    </tr>
+<!--    th:data-target="${'#edit' + user.id}"-->
+<!--        <c:url var="updateButton" value="//localhost:8080/updateInfo">-->
+<!--            <c:param name="usrId" value="${usr.id}"/>-->
+<!--        </c:url>-->
+
+<!--        <c:url var="deleteButton" value="//localhost:8080/deleteEmployee">-->
+<!--            <c:param name="empId" value="${emp.id}"/>-->
+<!--        </c:url>-->
+
+<!--        <tr>-->
+<!--            <td>${emp.name}</td>-->
+<!--            <td>${emp.surname}</td>-->
+<!--            <td>${emp.department}</td>-->
+<!--            <td>${emp.salary}</td>-->
+<!--            <td>-->
+<!--                <input type="button" value="Update"-->
+<!--                       onclick="window.location.href='${updateButton}'"/>-->
+
+<!--                <input type="button" value="Delete"-->
+<!--                       onclick="window.location.href='${deleteButton}'"/>-->
+<!--            </td>-->
+
+<!--        </tr>-->
+
+<!--    </tr:forEach>-->
+
+</table>
+<br>
+<input type="button" value="Add"
+       onclick="window.location.href='addNewUser'">
+<div>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Log out</button>
+    </form>
+</div>
+
+</body>
